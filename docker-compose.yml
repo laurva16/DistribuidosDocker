@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  estudiante-service:
+    image: laurauruena13/tallerdocker-estudiante-service:latest
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./backend/estudiante-service/.env
+    depends_on:
+      - mongo
+
+  sala-service:
+    image: laurauruena13/tallerdocker-sala-service:latest
+    ports:
+      - "3002:3002"
+    env_file:
+      - ./backend/Sala-service/.env
+    depends_on:
+      - mongo
+
+  prestamo-service:
+    image: laurauruena13/tallerdocker-prestamo-service:latest
+    ports:
+      - "3003:3003"
+    env_file:
+      - ./backend/Prestamo-service/.env
+    depends_on:
+      - mongo
+
+  front-end:
+    image: laurauruena13/tallerdocker-front-end:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - estudiante-service
+      - sala-service
+      - prestamo-service
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
